@@ -19,7 +19,7 @@ It currently supports [Server-Side Apply (SSA)][4], and declarative deletion thr
 To install the CLI using cargo, run:
 
 ```console
-$ cargo install --git https://github.com/ndrpnt/deka-rs
+$ cargo install --git https://github.com/ndrpnt/deka
 
 $ deka apply --help
 Server-side apply manifests
