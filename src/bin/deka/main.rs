@@ -88,18 +88,15 @@ enum Commands {
 async fn main() -> Result<()> {
     let cli = Cli::parse();
 
-    let tp = init_telemetry(
+    init_telemetry(
         cli.flags.verbose.tracing_level_filter(),
         cli.flags.output.clone(),
         cli.flags.debug,
     )?;
 
-    let res = match cli.command {
+    match cli.command {
         Commands::Apply { flags } => apply(&cli.flags, &flags).await,
-    };
-
-    tp.force_flush();
-    res
+    }
 }
 
 #[instrument(skip_all, err)]
@@ -170,64 +167,10 @@ fn build_client(config: Config, parallelism: usize) -> Result<Client> {
     Ok(client)
 }
 
-pub fn init_telemetry(
-    lvl: LevelFilter,
-    output: OutputFormat,
-    debug: bool,
-) -> Result<opentelemetry_sdk::trace::TracerProvider> {
-    use opentelemetry::trace::TracerProvider as _;
-    use opentelemetry::{KeyValue, StringValue, Value};
-    use opentelemetry_sdk::Resource;
-    use opentelemetry_semantic_conventions::resource;
-    use std::{ffi::OsStr, path::Path, process};
-    use tracing_opentelemetry::OpenTelemetryLayer;
+pub fn init_telemetry(lvl: LevelFilter, output: OutputFormat, debug: bool) -> Result<()> {
     use tracing_subscriber::{
         filter::Targets, layer::SubscriberExt, util::SubscriberInitExt, Layer, Registry,
     };
-
-    let resource = Resource::new([
-        KeyValue::new(resource::HOST_ARCH, env::consts::ARCH),
-        KeyValue::new(resource::OS_TYPE, env::consts::OS),
-        KeyValue::new(resource::PROCESS_PID, i64::from(process::id())),
-        KeyValue::new(
-            resource::PROCESS_COMMAND,
-            env::args().next().unwrap_or_default(),
-        ),
-        KeyValue::new(
-            resource::PROCESS_COMMAND_ARGS,
-            Value::Array(
-                env::args()
-                    .map(StringValue::from)
-                    .collect::<Vec<_>>()
-                    .into(),
-            ),
-        ),
-        KeyValue::new(
-            resource::PROCESS_EXECUTABLE_NAME,
-            env::current_exe()
-                .ok()
-                .as_ref()
-                .map(Path::new)
-                .and_then(Path::file_name)
-                .and_then(OsStr::to_str)
-                .map(String::from)
-                .unwrap_or_default(),
-        ),
-        KeyValue::new(
-            resource::PROCESS_EXECUTABLE_PATH,
-            env::current_exe()
-                .ok()
-                .as_ref()
-                .map(Path::new)
-                .map(Path::display)
-                .as_ref()
-                .map(ToString::to_string)
-                .unwrap_or_default(),
-        ),
-        KeyValue::new(resource::PROCESS_RUNTIME_NAME, "rustc"),
-        KeyValue::new(resource::SERVICE_VERSION, env!("CARGO_PKG_VERSION")),
-        KeyValue::new(resource::SERVICE_NAME, env!("CARGO_BIN_NAME")),
-    ]);
 
     let stdout = match output {
         OutputFormat::Json => tracing_subscriber::fmt::layer().json().boxed(),
@@ -244,24 +187,8 @@ pub fn init_telemetry(
         stdout.with_filter(only_crate).boxed()
     };
 
-    let provider = opentelemetry_sdk::trace::TracerProvider::builder()
-        .with_resource(resource)
-        .with_batch_exporter(
-            opentelemetry_otlp::SpanExporter::builder()
-                .with_tonic()
-                .build()
-                .into_diagnostic()?,
-            opentelemetry_sdk::runtime::Tokio,
-        )
-        .build();
-
-    let otlp = OpenTelemetryLayer::new(provider.tracer(env!("CARGO_BIN_NAME"))).with_filter(lvl);
-
     Registry::default()
-        .with(otlp)
         .with(stdout)
         .try_init()
-        .into_diagnostic()?;
-
-    Ok(provider)
+        .into_diagnostic()
 }

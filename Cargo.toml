@@ -4,29 +4,24 @@
   edition = "2021"
 
 [dependencies]
-  backoff                            = { version = "0.4.0", features = ["tokio"] }
-  clap                               = { version = "4.5.22", features = ["derive"] }
-  clap-verbosity-flag                = { version = "3.0.1", features = ["tracing"], default-features = false }
-  futures                            = { version = "0.3.31" }
-  k8s-openapi                        = { version = "0.23.0", features = ["v1_26"] }
-  kube                               = { version = "0.97.0", features = ["derive", "runtime", "unstable-runtime"] }
-  miette                             = { version = "7.4.0", features = ["fancy"] }
-  opentelemetry                      = { version = "0.27.1" }
-  opentelemetry_sdk                  = { version = "0.27.1", features = ["rt-tokio"] }
-  opentelemetry-otlp                 = { version = "0.27.0" }
-  opentelemetry-semantic-conventions = { version = "0.27.0", features = ["semconv_experimental"] }
-  serde                              = { version = "1.0.215" }
-  serde_json                         = { version = "1.0.133" }
-  serde_yaml                         = { version = "0.9.34" }
-  strum                              = { version = "0.26.3" }
-  strum_macros                       = { version = "0.26.4" }
-  thiserror                          = { version = "2.0.4" }
-  tokio                              = { version = "1.42.0", features = ["macros", "rt-multi-thread"] }
-  tower                              = { version = "0.5.1", features = ["limit", "tracing"] }
-  tracing                            = { version = "0.1.41" }
-  tracing-logfmt                     = { version = "0.3.5" }
-  tracing-opentelemetry              = { version = "0.28.0" }
-  tracing-subscriber                 = { version = "0.3.19", features = ["json"] }
+  backoff             = { version = "0.4.0", features = ["tokio"] }
+  clap                = { version = "4.5.22", features = ["derive"] }
+  clap-verbosity-flag = { version = "3.0.1", features = ["tracing"], default-features = false }
+  futures             = { version = "0.3.31" }
+  k8s-openapi         = { version = "0.23.0", features = ["v1_26"] }
+  kube                = { version = "0.97.0", features = ["derive", "runtime", "unstable-runtime"] }
+  miette              = { version = "7.4.0", features = ["fancy"] }
+  serde               = { version = "1.0.215" }
+  serde_json          = { version = "1.0.133" }
+  serde_yaml          = { version = "0.9.34" }
+  strum               = { version = "0.26.3" }
+  strum_macros        = { version = "0.26.4" }
+  thiserror           = { version = "2.0.4" }
+  tokio               = { version = "1.42.0", features = ["macros", "rt-multi-thread"] }
+  tower               = { version = "0.5.1", features = ["limit", "tracing"] }
+  tracing             = { version = "0.1.41" }
+  tracing-logfmt      = { version = "0.3.5" }
+  tracing-subscriber  = { version = "0.3.19", features = ["json"] }
 
 [dev-dependencies]
   http       = { version = "1.2.0" }
