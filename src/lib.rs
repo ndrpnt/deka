@@ -183,13 +183,13 @@ mod tests {
     use super::*;
     use http::{Request, Response, StatusCode};
     use kube::client::Body;
-    use serde_json::Value;
+    use serde_json::{json, Value};
     use std::cell::LazyCell;
     use std::{future::Future, time::Duration};
     use tower_test::mock;
 
     const API_RESOURCES: LazyCell<Value> = LazyCell::new(|| {
-        serde_json::json!({
+        json!({
             "kind":"APIResourceList",
             "groupVersion":"v1",
             "resources":[
@@ -242,7 +242,7 @@ mod tests {
     });
 
     const EMPTY_API_RESOURCES: LazyCell<Value> = LazyCell::new(|| {
-        serde_json::json!({
+        json!({
             "kind":"APIResourceList",
             "groupVersion":"v1",
             "resources": []
@@ -250,7 +250,7 @@ mod tests {
     });
 
     const POD: LazyCell<Value> = LazyCell::new(|| {
-        serde_json::json!({
+        json!({
             "apiVersion": "v1",
             "kind": "Pod",
             "metadata": {
@@ -263,7 +263,7 @@ mod tests {
     });
 
     const SVC: LazyCell<Value> = LazyCell::new(|| {
-        serde_json::json!({
+        json!({
             "apiVersion": "v1",
             "kind": "Service",
             "metadata": {
@@ -274,7 +274,7 @@ mod tests {
     });
 
     const INTERNAL_ERROR: LazyCell<Value> = LazyCell::new(|| {
-        serde_json::json!({
+        json!({
             "kind": "Status",
             "apiVersion": "v1",
             "metadata": {},
