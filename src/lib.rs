@@ -353,7 +353,7 @@ mod tests {
                     .unwrap(),
             ),
             (
-                Request::patch(ssa_uri("test_namespace", "pods", "example", "test_manager"))
+                Request::patch(ssa_uri("test_ns", "pods", "example", "test_manager"))
                     .header("accept", "application/json")
                     .header("content-type", "application/apply-patch+yaml")
                     .body(Body::from(serde_json::to_vec(&*POD).unwrap()))
@@ -371,7 +371,7 @@ mod tests {
                 &serde_json::from_value((*POD).clone()).unwrap(),
                 &Client::new(s, "default"),
                 "test_manager",
-                Some("test_namespace"),
+                Some("test_ns"),
                 &b,
             )
             .await
@@ -408,7 +408,7 @@ mod tests {
                     .unwrap(),
             ),
             (
-                Request::patch(ssa_uri("test_namespace", "pods", "example", "test_manager"))
+                Request::patch(ssa_uri("test_ns", "pods", "example", "test_manager"))
                     .header("accept", "application/json")
                     .header("content-type", "application/apply-patch+yaml")
                     .body(Body::from(serde_json::to_vec(&*POD).unwrap()))
@@ -418,16 +418,11 @@ mod tests {
                     .unwrap(),
             ),
             (
-                Request::patch(ssa_uri(
-                    "test_namespace",
-                    "services",
-                    "example",
-                    "test_manager",
-                ))
-                .header("accept", "application/json")
-                .header("content-type", "application/apply-patch+yaml")
-                .body(Body::from(serde_json::to_vec(&*SVC).unwrap()))
-                .unwrap(),
+                Request::patch(ssa_uri("test_ns", "services", "example", "test_manager"))
+                    .header("accept", "application/json")
+                    .header("content-type", "application/apply-patch+yaml")
+                    .body(Body::from(serde_json::to_vec(&*SVC).unwrap()))
+                    .unwrap(),
                 Response::builder()
                     .body(Body::from(serde_json::to_vec(&*SVC).unwrap()))
                     .unwrap(),
@@ -444,7 +439,7 @@ mod tests {
                 ],
                 &Client::new(s, "default"),
                 "test_manager",
-                Some("test_namespace"),
+                Some("test_ns"),
                 &b,
             )
             .await
@@ -483,7 +478,7 @@ mod tests {
                     .unwrap(),
             ),
             (
-                Request::patch(ssa_uri("test_namespace", "pods", "example", "test_manager"))
+                Request::patch(ssa_uri("test_ns", "pods", "example", "test_manager"))
                     .header("accept", "application/json")
                     .header("content-type", "application/apply-patch+yaml")
                     .body(Body::from(serde_json::to_vec(&*POD).unwrap()))
@@ -504,7 +499,7 @@ mod tests {
                 &serde_json::from_value((*POD).clone()).unwrap(),
                 &Client::new(s, "default"),
                 "test_manager",
-                Some("test_namespace"),
+                Some("test_ns"),
                 &b,
             )
             .await
@@ -541,7 +536,7 @@ mod tests {
                     .unwrap(),
             ),
             (
-                Request::patch(ssa_uri("test_namespace", "pods", "example", "test_manager"))
+                Request::patch(ssa_uri("test_ns", "pods", "example", "test_manager"))
                     .header("accept", "application/json")
                     .header("content-type", "application/apply-patch+yaml")
                     .body(Body::from(serde_json::to_vec(&*POD).unwrap()))
@@ -552,7 +547,7 @@ mod tests {
                     .unwrap(),
             ),
             (
-                Request::patch(ssa_uri("test_namespace", "pods", "example", "test_manager"))
+                Request::patch(ssa_uri("test_ns", "pods", "example", "test_manager"))
                     .header("accept", "application/json")
                     .header("content-type", "application/apply-patch+yaml")
                     .body(Body::from(serde_json::to_vec(&*POD).unwrap()))
@@ -573,7 +568,7 @@ mod tests {
                 &serde_json::from_value((*POD).clone()).unwrap(),
                 &Client::new(s, "default"),
                 "test_manager",
-                Some("test_namespace"),
+                Some("test_ns"),
                 &b,
             )
             .await
@@ -612,7 +607,7 @@ mod tests {
                 &serde_json::from_value((*POD).clone()).unwrap(),
                 &Client::new(s, "default"),
                 "test_manager",
-                Some("test_namespace"),
+                Some("test_ns"),
                 &b,
             )
             .await
