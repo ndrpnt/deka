@@ -265,6 +265,22 @@ mod tests {
         })
     });
 
+    const POD_NOT_FOUND_ERROR: LazyCell<Value> = LazyCell::new(|| {
+        json!({
+            "kind": "Status",
+            "apiVersion": "v1",
+            "metadata": {},
+            "status": "Failure",
+            "message": "pods \"example\" not found",
+            "reason": "NotFound",
+            "details": {
+                "name": "example",
+                "kind": "pods"
+            },
+            "code": 404
+        })
+    });
+
     const POD_DELETED_RESPONSE: LazyCell<Value> = LazyCell::new(|| {
         json!({
             "kind": "Status",
@@ -579,6 +595,60 @@ mod tests {
                 ))
                 .unwrap(),
         )];
+
+        let b = MockBackoff::new(LimitAndCount::default());
+
+        with_mock_service(expectations, |s| async {
+            apply_object(
+                &serde_json::from_value(pod).unwrap(),
+                &Client::new(s, "default"),
+                "test_manager",
+                Some("test_ns"),
+                &b,
+            )
+            .await
+            .unwrap();
+        })
+        .await;
+
+        assert_eq!(
+            unwrap_arc_mutex(b.reset_calls),
+            1,
+            "unexpected number of reset calls"
+        );
+        assert_eq!(
+            unwrap_arc_mutex(b.next_backoff_calls),
+            0,
+            "unexpected number of next_backoff calls"
+        );
+    }
+
+    #[test_log::test(tokio::test)]
+    #[test_log(default_log_filter = "deka=trace")]
+    async fn delete_1_object_already_absent() {
+        let mut pod = (*POD).clone();
+        pod["metadata"]["annotations"][ANNOTATION_ACTION] = json!(Action::Delete.as_ref());
+
+        let expectations = vec![
+            (
+                Request::get("/api/v1").body(Body::empty()).unwrap(),
+                Response::builder()
+                    .body(Body::from(serde_json::to_vec(&*API_RESOURCES).unwrap()))
+                    .unwrap(),
+            ),
+            (
+                Request::delete("/api/v1/namespaces/test_ns/pods/example?")
+                    .header("content-type", "application/json")
+                    .body(Body::from(serde_json::to_vec(&json!({})).unwrap()))
+                    .unwrap(),
+                Response::builder()
+                    .status(StatusCode::NOT_FOUND)
+                    .body(Body::from(
+                        serde_json::to_vec(&*POD_NOT_FOUND_ERROR).unwrap(),
+                    ))
+                    .unwrap(),
+            ),
+        ];
 
         let b = MockBackoff::new(LimitAndCount::default());
 
