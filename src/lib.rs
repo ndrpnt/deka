@@ -262,6 +262,20 @@ mod tests {
         })
     });
 
+    const POD_DELETED_RESPONSE: LazyCell<Value> = LazyCell::new(|| {
+        json!({
+            "kind": "Status",
+            "apiVersion": "v1",
+            "metadata": {},
+            "status": "Success",
+            "details": {
+                "name": "example",
+                "kind": "pods",
+                "uid": "e2e1d349-f96a-446f-9da5-f8239517bb79"
+            }
+        })
+    });
+
     const SVC: LazyCell<Value> = LazyCell::new(|| {
         json!({
             "apiVersion": "v1",
@@ -382,6 +396,196 @@ mod tests {
         assert_eq!(
             unwrap_arc_mutex(b.reset_calls),
             1,
+            "unexpected number of reset calls"
+        );
+        assert_eq!(
+            unwrap_arc_mutex(b.next_backoff_calls),
+            0,
+            "unexpected number of next_backoff calls"
+        );
+    }
+
+    #[test_log::test(tokio::test)]
+    #[test_log(default_log_filter = "deka=trace")]
+    async fn apply_1_object_with_explicit_action_annotation() {
+        let mut pod = (*POD).clone();
+        pod["metadata"]["annotations"][ANNOTATION_ACTION] = json!(Action::Apply.as_ref());
+
+        let expectations = vec![
+            (
+                Request::get("/api/v1").body(Body::empty()).unwrap(),
+                Response::builder()
+                    .body(Body::from(serde_json::to_vec(&*API_RESOURCES).unwrap()))
+                    .unwrap(),
+            ),
+            (
+                Request::patch(ssa_uri("test_ns", "pods", "example", "test_manager"))
+                    .header("accept", "application/json")
+                    .header("content-type", "application/apply-patch+yaml")
+                    .body(Body::from(serde_json::to_vec(&pod).unwrap()))
+                    .unwrap(),
+                Response::builder()
+                    .body(Body::from(serde_json::to_vec(&pod).unwrap()))
+                    .unwrap(),
+            ),
+        ];
+
+        let b = MockBackoff::new(LimitAndCount::default());
+
+        with_mock_service(expectations, |s| async {
+            apply_object(
+                &serde_json::from_value(pod).unwrap(),
+                &Client::new(s, "default"),
+                "test_manager",
+                Some("test_ns"),
+                &b,
+            )
+            .await
+            .unwrap();
+        })
+        .await;
+
+        assert_eq!(
+            unwrap_arc_mutex(b.reset_calls),
+            1,
+            "unexpected number of reset calls"
+        );
+        assert_eq!(
+            unwrap_arc_mutex(b.next_backoff_calls),
+            0,
+            "unexpected number of next_backoff calls"
+        );
+    }
+
+    #[test_log::test(tokio::test)]
+    #[test_log(default_log_filter = "deka=trace")]
+    async fn apply_1_object_with_explicit_namespace() {
+        let mut pod = (*POD).clone();
+        pod["metadata"]["namespace"] = json!("another_ns");
+
+        let expectations = vec![
+            (
+                Request::get("/api/v1").body(Body::empty()).unwrap(),
+                Response::builder()
+                    .body(Body::from(serde_json::to_vec(&*API_RESOURCES).unwrap()))
+                    .unwrap(),
+            ),
+            (
+                Request::patch(ssa_uri("another_ns", "pods", "example", "test_manager"))
+                    .header("accept", "application/json")
+                    .header("content-type", "application/apply-patch+yaml")
+                    .body(Body::from(serde_json::to_vec(&pod).unwrap()))
+                    .unwrap(),
+                Response::builder()
+                    .body(Body::from(serde_json::to_vec(&pod).unwrap()))
+                    .unwrap(),
+            ),
+        ];
+
+        let b = MockBackoff::new(LimitAndCount::default());
+
+        with_mock_service(expectations, |s| async {
+            apply_object(
+                &serde_json::from_value(pod).unwrap(),
+                &Client::new(s, "default"),
+                "test_manager",
+                Some("test_ns"),
+                &b,
+            )
+            .await
+            .unwrap();
+        })
+        .await;
+
+        assert_eq!(
+            unwrap_arc_mutex(b.reset_calls),
+            1,
+            "unexpected number of reset calls"
+        );
+        assert_eq!(
+            unwrap_arc_mutex(b.next_backoff_calls),
+            0,
+            "unexpected number of next_backoff calls"
+        );
+    }
+
+    #[test_log::test(tokio::test)]
+    #[test_log(default_log_filter = "deka=trace")]
+    async fn delete_1_object() {
+        let mut pod = (*POD).clone();
+        pod["metadata"]["annotations"][ANNOTATION_ACTION] = json!(Action::Delete.as_ref());
+
+        let expectations = vec![
+            (
+                Request::get("/api/v1").body(Body::empty()).unwrap(),
+                Response::builder()
+                    .body(Body::from(serde_json::to_vec(&*API_RESOURCES).unwrap()))
+                    .unwrap(),
+            ),
+            (
+                Request::delete("/api/v1/namespaces/test_ns/pods/example?")
+                    .header("content-type", "application/json")
+                    .body(Body::from(serde_json::to_vec(&json!({})).unwrap()))
+                    .unwrap(),
+                Response::builder()
+                    .body(Body::from(
+                        serde_json::to_vec(&*POD_DELETED_RESPONSE).unwrap(),
+                    ))
+                    .unwrap(),
+            ),
+        ];
+
+        let b = MockBackoff::new(LimitAndCount::default());
+
+        with_mock_service(expectations, |s| async {
+            apply_object(
+                &serde_json::from_value(pod).unwrap(),
+                &Client::new(s, "default"),
+                "test_manager",
+                Some("test_ns"),
+                &b,
+            )
+            .await
+            .unwrap();
+        })
+        .await;
+
+        assert_eq!(
+            unwrap_arc_mutex(b.reset_calls),
+            1,
+            "unexpected number of reset calls"
+        );
+        assert_eq!(
+            unwrap_arc_mutex(b.next_backoff_calls),
+            0,
+            "unexpected number of next_backoff calls"
+        );
+    }
+
+    #[test_log::test(tokio::test)]
+    #[test_log(default_log_filter = "deka=trace")]
+    async fn invalid_action_annotation() {
+        let mut pod = (*POD).clone();
+        pod["metadata"]["annotations"][ANNOTATION_ACTION] = json!("invalid_action");
+
+        let b = MockBackoff::new(LimitAndCount::default());
+
+        with_mock_service(vec![], |s| async {
+            apply_object(
+                &serde_json::from_value(pod).unwrap(),
+                &Client::new(s, "default"),
+                "test_manager",
+                Some("test_ns"),
+                &b,
+            )
+            .await
+            .unwrap_err();
+        })
+        .await;
+
+        assert_eq!(
+            unwrap_arc_mutex(b.reset_calls),
+            0,
             "unexpected number of reset calls"
         );
         assert_eq!(
