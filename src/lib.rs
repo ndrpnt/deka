@@ -4,6 +4,7 @@ use kube::{
     api::{DeleteParams, DynamicObject, Patch, PatchParams},
     core::{gvk::ParseGroupVersionError, GroupVersionKind, TypeMeta},
     discovery::{self, Scope},
+    error::DiscoveryError,
     Api, Client, Error as KubeError, Resource, ResourceExt,
 };
 use std::{
@@ -119,7 +120,9 @@ async fn apply_object<B: Backoff + Clone>(
             .await
         {
             Ok(v) => v,
-            Err(KubeError::Api(e)) if e.code == 404 && action == &Action::Delete => {
+            Err(KubeError::Discovery(DiscoveryError::MissingKind(_)))
+                if action == &Action::Delete =>
+            {
                 info!("Object already deleted (kind not found)");
                 return Ok(());
             }
@@ -534,6 +537,48 @@ mod tests {
                     .unwrap(),
             ),
         ];
+
+        let b = MockBackoff::new(LimitAndCount::default());
+
+        with_mock_service(expectations, |s| async {
+            apply_object(
+                &serde_json::from_value(pod).unwrap(),
+                &Client::new(s, "default"),
+                "test_manager",
+                Some("test_ns"),
+                &b,
+            )
+            .await
+            .unwrap();
+        })
+        .await;
+
+        assert_eq!(
+            unwrap_arc_mutex(b.reset_calls),
+            1,
+            "unexpected number of reset calls"
+        );
+        assert_eq!(
+            unwrap_arc_mutex(b.next_backoff_calls),
+            0,
+            "unexpected number of next_backoff calls"
+        );
+    }
+
+    #[test_log::test(tokio::test)]
+    #[test_log(default_log_filter = "deka=trace")]
+    async fn delete_1_object_with_missing_kind() {
+        let mut pod = (*POD).clone();
+        pod["metadata"]["annotations"][ANNOTATION_ACTION] = json!(Action::Delete.as_ref());
+
+        let expectations = vec![(
+            Request::get("/api/v1").body(Body::empty()).unwrap(),
+            Response::builder()
+                .body(Body::from(
+                    serde_json::to_vec(&*EMPTY_API_RESOURCES).unwrap(),
+                ))
+                .unwrap(),
+        )];
 
         let b = MockBackoff::new(LimitAndCount::default());
 
