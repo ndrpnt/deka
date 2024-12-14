@@ -652,7 +652,7 @@ mod tests {
                 &serde_json::from_value(pod).unwrap(),
                 &Client::new(s, "default"),
                 "test_manager",
-                Some("test_ns"),
+                None,
                 &b,
             )
             .await
@@ -739,7 +739,7 @@ mod tests {
                 &serde_json::from_value(pod).unwrap(),
                 &Client::new(s, "default"),
                 "test_manager",
-                Some("test_ns"),
+                None,
                 &b,
             )
             .await
@@ -999,7 +999,7 @@ mod tests {
                 &serde_json::from_value((*POD).clone()).unwrap(),
                 &Client::new(s, "default"),
                 "test_manager",
-                Some("test_ns"),
+                None,
                 &b,
             )
             .await
