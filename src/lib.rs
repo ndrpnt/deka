@@ -530,6 +530,55 @@ mod tests {
 
     #[test_log::test(tokio::test)]
     #[test_log(default_log_filter = "deka=trace")]
+    async fn apply_1_object_with_default_client_namespace() {
+        let expectations = vec![
+            (
+                Request::get("/api/v1").body(Body::empty()).unwrap(),
+                Response::builder()
+                    .body(Body::from(serde_json::to_vec(&*API_RESOURCES).unwrap()))
+                    .unwrap(),
+            ),
+            (
+                Request::patch(ssa_uri("default", "pods", "example", "test_manager"))
+                    .header("accept", "application/json")
+                    .header("content-type", "application/apply-patch+yaml")
+                    .body(Body::from(serde_json::to_vec(&*POD).unwrap()))
+                    .unwrap(),
+                Response::builder()
+                    .body(Body::from(serde_json::to_vec(&*POD).unwrap()))
+                    .unwrap(),
+            ),
+        ];
+
+        let b = MockBackoff::new(LimitAndCount::default());
+
+        with_mock_service(expectations, |s| async {
+            apply_object(
+                &serde_json::from_value((*POD).clone()).unwrap(),
+                &Client::new(s, "default"),
+                "test_manager",
+                None,
+                &b,
+            )
+            .await
+            .unwrap();
+        })
+        .await;
+
+        assert_eq!(
+            unwrap_arc_mutex(b.reset_calls),
+            1,
+            "unexpected number of reset calls"
+        );
+        assert_eq!(
+            unwrap_arc_mutex(b.next_backoff_calls),
+            0,
+            "unexpected number of next_backoff calls"
+        );
+    }
+
+    #[test_log::test(tokio::test)]
+    #[test_log(default_log_filter = "deka=trace")]
     async fn delete_1_object() {
         let mut pod = (*POD).clone();
         pod["metadata"]["annotations"][ANNOTATION_ACTION] = json!(Action::Delete.as_ref());
@@ -769,6 +818,30 @@ mod tests {
         assert_eq!(
             unwrap_arc_mutex(b.reset_calls),
             2,
+            "unexpected number of reset calls"
+        );
+        assert_eq!(
+            unwrap_arc_mutex(b.next_backoff_calls),
+            0,
+            "unexpected number of next_backoff calls"
+        );
+    }
+
+    #[test_log::test(tokio::test)]
+    #[test_log(default_log_filter = "deka=trace")]
+    async fn apply_0_objects() {
+        let b = MockBackoff::new(LimitAndCount::default());
+
+        with_mock_service(vec![], |s| async {
+            apply_objects(vec![], &Client::new(s, "default"), "test_manager", None, &b)
+                .await
+                .unwrap();
+        })
+        .await;
+
+        assert_eq!(
+            unwrap_arc_mutex(b.reset_calls),
+            0,
             "unexpected number of reset calls"
         );
         assert_eq!(
