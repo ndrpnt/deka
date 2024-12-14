@@ -1,4 +1,7 @@
-use backoff::backoff::Backoff;
+pub mod backoff;
+
+use ::backoff as backoffcrate;
+use backoff::{Backoff, BackoffWrapper};
 use futures::StreamExt;
 use kube::{
     api::{DeleteParams, DynamicObject, Patch, PatchParams},
@@ -114,7 +117,7 @@ async fn apply_object<B: Backoff + Clone>(
     let gvk = &GroupVersionKind::try_from(object.types.as_ref().unwrap_or(&TypeMeta::default()))?;
     let data = &Patch::Apply(serde_json::to_value(&object)?);
 
-    backoff::future::retry(backoff.clone(), || async move {
+    backoffcrate::future::retry(BackoffWrapper(backoff.clone()), || async move {
         let (resource, capabilities) = match discovery::pinned_kind(client, gvk)
             .instrument(debug_span!("discover_api_resource").or_current())
             .await
@@ -128,7 +131,7 @@ async fn apply_object<B: Backoff + Clone>(
             }
             Err(e) => {
                 warn!(error = %e, "Failed to discover API");
-                return Err(backoff::Error::transient(e));
+                return Err(backoffcrate::Error::transient(e));
             }
         };
 
@@ -151,7 +154,7 @@ async fn apply_object<B: Backoff + Clone>(
                     }
                     Err(e) => {
                         warn!(error = %e, "Failed to apply object");
-                        Err(backoff::Error::transient(e))
+                        Err(backoffcrate::Error::transient(e))
                     }
                 }
             }
@@ -171,7 +174,7 @@ async fn apply_object<B: Backoff + Clone>(
                     }
                     Err(e) => {
                         warn!(error = %e, "Failed to delete object");
-                        Err(backoff::Error::transient(e))
+                        Err(backoffcrate::Error::transient(e))
                     }
                 }
             }
@@ -1017,6 +1020,19 @@ mod tests {
             1,
             "unexpected number of next_backoff calls"
         );
+    }
+
+    #[test_log::test(tokio::test)]
+    #[test_log(default_log_filter = "deka=trace")]
+    async fn can_use_external_backoff() {
+        let b = backoffcrate::ExponentialBackoff::default();
+
+        with_mock_service(vec![], |s| async {
+            apply_objects(vec![], &Client::new(s, "default"), "test_manager", None, &b)
+                .await
+                .unwrap();
+        })
+        .await;
     }
 
     /// Does not return before receiving an undue request, so this can safely
