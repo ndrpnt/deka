@@ -1,0 +1,675 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-1
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-2
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-3
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-4
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-5
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-6
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-7
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-8
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-9
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-10
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-11
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-12
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-13
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-14
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-15
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-16
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-17
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-18
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-19
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-20
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-21
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-22
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-23
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-24
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-25
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-26
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-27
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-28
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-29
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-30
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-31
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-32
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-33
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-34
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-35
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-36
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-37
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-38
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-39
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-40
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-41
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-42
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-43
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-44
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-45
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-46
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-47
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-48
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-49
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-50
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-51
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-52
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-53
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-54
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-55
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-56
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-57
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-58
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-59
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-60
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-61
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-62
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-63
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-64
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-65
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-66
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-67
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-68
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-69
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-70
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-71
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-72
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-73
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-74
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-75
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-76
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-77
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-78
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-79
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-80
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-81
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-82
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-83
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-84
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-85
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-86
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-87
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-88
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-89
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-90
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-91
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-92
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-93
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-94
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-95
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-96
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-97
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-98
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-99
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-100
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-101
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-102
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-103
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-104
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-105
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-106
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-107
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-108
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-109
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-110
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-111
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-112
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-113
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-114
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-115
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-116
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-117
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-118
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-119
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-120
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-121
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-122
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-123
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-124
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-125
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-126
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-127
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-128
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-129
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-130
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-131
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-132
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-133
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-134
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foo-135

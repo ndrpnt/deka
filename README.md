@@ -4,7 +4,7 @@
 
 `deka` is a proof-of-concept CLI and library offering an alternative to `kubectl apply`.
 
-When deploying Kubernetes manifests, tools traditionally rely on ordering API calls to handle dependencies.
+When deploying Kubernetes manifests, tools traditionally rely on ordering API calls to handle dependencies, e.g. apply Namespaces first and then Pods.
 They are either "smart" (i.e. they enforce hard-coded priorities: [Helm][0], [Argo CD][1]),
 "too dumb" (i.e. they leave that burden to the user: [kubectl][2]),
 or both (e.g. [Kustomize][3]).
@@ -39,6 +39,10 @@ Options:
   -p, --parallelism <PARALLELISM>      Limit the number of parallel requests. 0 to disable [default: 10]
   -h, --help                           Print help
 ```
+
+## Examples
+
+See [examples](./examples/).
 
 [0]: https://github.com/helm/helm/blob/2cea1466d3c27491364eb44bafc7be1ca5461b2d/pkg/releaseutil/kind_sorter.go#L31-L68
 [1]: https://github.com/argoproj/gitops-engine/blob/0371401803996f84bcd70a5f6bb2f0ecc7d7b5d2/pkg/sync/sync_tasks.go#L27-L62
