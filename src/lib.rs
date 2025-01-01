@@ -1046,7 +1046,7 @@ mod tests {
             let (request, send) = handle.next_request().await.expect("service not called");
             let (expected_request, response) = {
                 let mut _expectations = expectations.lock().unwrap();
-                _expectations
+                let matched_req_index = _expectations
                     .iter()
                     .position(|e| {
                         e.0.method() == request.method()
@@ -1054,8 +1054,8 @@ mod tests {
                             && e.0.headers() == request.headers()
                             && e.0.version() == request.version()
                     })
-                    .map(|p| _expectations.remove(p))
-                    .unwrap_or_else(|| panic!("unexpected request: {:#?}", request))
+                    .unwrap_or_else(|| panic!("unexpected request: {:#?}", request));
+                _expectations.remove(matched_req_index)
             };
             assert_eq!(
                 request.into_body().collect_bytes().await.unwrap(),
