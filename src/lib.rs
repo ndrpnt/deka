@@ -1105,10 +1105,7 @@ mod tests {
         tokio::select! {
             _ = mock_server(handle, Arc::clone(&expectations)) => {}
             _ = f(service) => {
-                let remaining_expectations = Arc::try_unwrap(expectations)
-                    .expect("Arc should have only one reference")
-                    .into_inner()
-                    .unwrap();
+                let remaining_expectations = unwrap_arc_mutex(expectations);
                 assert!(
                     remaining_expectations.is_empty(),
                     "unmet expectation(s): {:#?}",
