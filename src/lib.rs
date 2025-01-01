@@ -1035,9 +1035,29 @@ mod tests {
         .await;
     }
 
-    /// Does not return before receiving an undue request, so this can safely
-    /// be [`tokio::select!`]ed without returning before the client on
-    /// successful applies.
+    /// Asynchronously runs a mock "server" (the backend counterpart of a mock
+    /// [`tower::Service`]), that handles incoming requests and responds based
+    /// on predefined expectations.
+    ///
+    /// # Matching Requests
+    /// - Matches requests based on method, URI, headers, and HTTP version.
+    /// - Requests differing only in body are matched sequentially.
+    /// - Each expectation is consumed once it is matched. If the same request
+    ///   is expected multiple times, there should be multiple corresponding
+    ///   expectations.
+    ///
+    /// # Panics
+    /// - Panics upon receiving a request that doesn't match any remaining
+    ///   expectation.
+    /// - Panics when the body of a request doesn't match its expectation.
+    ///
+    /// # Note
+    /// This function panics in case of an unexpected request but does not
+    /// return, even when the last expectation is consumed. It is the caller's
+    /// responsibility to cancel the returned future when it is no longer
+    /// useful, i.e., when the client is done. This way, [`mock_server`] can be
+    /// safely used with [`tokio::select!`] without returning before the client
+    /// on successful applies.
     async fn mock_server(
         mut handle: mock::Handle<Request<Body>, Response<Body>>,
         expectations: Arc<Mutex<Vec<(Request<Body>, Response<Body>)>>>,
@@ -1066,6 +1086,15 @@ mod tests {
         }
     }
 
+    /// Creates a mock [`tower::Service`] that responds to requests with the
+    /// given expactations.
+    ///
+    /// Waits on `f` and ensure that all expactations have been consumed. See
+    /// [`mock_server`] for more information on how requests are matched.
+    ///
+    /// # Panics
+    /// - Panics if the service receives an unexpected request.
+    /// - Panics if `f` resolves while there are remaining expactations.
     async fn with_mock_service<F, Fut>(expectations: Vec<(Request<Body>, Response<Body>)>, f: F)
     where
         F: FnOnce(mock::Mock<Request<Body>, Response<Body>>) -> Fut,
